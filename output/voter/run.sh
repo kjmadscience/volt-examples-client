@@ -102,12 +102,12 @@ function async-benchmark() {
     jars-ifneeded
     java $add_open \
 	-classpath voter-client.jar:$CLIENTCLASSPATH voter.AsyncBenchmark \
-        --displayinterval=50 \
+        --displayinterval=60 \
         --warmup=5 \
-        --duration=400 \
+        --duration=30 \
         --servers=$SERVERS \
         --contestants=3 \
-        --ratelimit=100 \
+        --ratelimit=1000 \
         --maxvotes=6
 }
 
@@ -123,13 +123,13 @@ function sync-benchmark() {
     java $add_opens \
 	-classpath voter-client.jar:$CLIENTCLASSPATH -Dlog4j.configuration=file://$LOG4J \
         voter.SyncBenchmark \
-        --displayinterval=50 \
+        --displayinterval=60 \
         --warmup=5 \
-        --duration=400 \
+        --duration=30 \
         --servers=$SERVERS \
         --contestants=3 \
         --maxvotes=6 \
-        --ratelimit=100 \
+        --ratelimit=1000 \
         --threads=40
 }
 
@@ -145,12 +145,12 @@ function jdbc-benchmark() {
     java $add_open \
 	-classpath voter-client.jar:$CLIENTCLASSPATH -Dlog4j.configuration=file://$LOG4J \
         voter.JDBCBenchmark \
-        --displayinterval=50 \
-        --duration=400 \
+        --displayinterval=60 \
+        --duration=30 \
         --servers=$SERVERS \
         --maxvotes=2 \
         --contestants=3 \
-        --ratelimit=100 \
+        --ratelimit=1000 \
         --threads=40
 }
 

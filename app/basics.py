@@ -14,29 +14,35 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"Welcome to Client Server, visit /docs for Swagger UI"}
 
-@app.get("/items/{item_id}")  # Path parameters
-async def read_item(item_id: int):
-    return {"item_id": item_id}
-
-@app.post("/configs/yaml") # take input from user and write in YAML
-async def create_config(config: config):
-    config_dict = config.dict()
-    with open("../config/var.yaml", "w") as stream:
-        print(yaml.safe_dump(config_dict, stream))
-    return config_dict
-
-
-
-
-templates = Jinja2Templates(directory="../templates/voter/")
-@app.post("/client/config")
-async def make_config(request: Request, servers: str, display_interval: int, warm_up: int, duration: int, contestants: int, ratelimit: int, maxvotes: int, threads: Union[int, None]):
-   # templates.TemplateResponse("run.sh.jinja", {"request": request, "servers": servers, "display_interval": display_interval, "warm_up": warm_up, "duration": duration, "contestants": contestants, "ratelimit": ratelimit, "max_votes": maxvotes, "threads": threads})
-   #template = templateEnv.get_template(TEMPLATE_FILE)
+@app.post("/client/makeConfigFile")
+async def make_config(request: Request, example: str, servers: str, display_interval: int, warm_up: int, duration: int, contestants: int, ratelimit: int, maxvotes: int, threads: Union[int, None] = None):
+   templates = Jinja2Templates(directory="../templates/"+example)
    file = templates.get_template("run.sh.jinja").render({"request": request, "servers": servers, "display_interval": display_interval, "warm_up": warm_up, "duration": duration, "contestants": contestants, "ratelimit": ratelimit, "max_votes": maxvotes, "threads": threads})
-   with open('../output/voter/run.sh', "w") as f:
+   with open('../output/'+example+'/run.sh', "w") as f:
     print(file, file=f)
-    msg = "Bonsoir Elliot"
-    return msg
+    return "Run file created Successfully"
+
+@app.post("/client/SendConfigFile")
+async def send_config(clientHost: str, example: str,zone: str) -> int:
+    dest = "/opt/voltdb/examples/" + example + "/auto-run.sh"
+    src = "../output/"+example+"/run.sh"
+    os.system('gcloud compute scp ' + src + ' ' + clientHost + ':' + dest + ' --zone='+zone )
+    return "Copied!"
+
+@app.post("/client/StartRun")
+async def start_Run(clientHost: str, example: str,zone: str, mode: str) -> int:
+    command = "nohup sh /opt/voltdb/examples/"+example+"/auto-run.sh "+mode+" &"
+    os.system('gcloud compute ssh root@'+clientHost+' --command="'+command+'" --zone='+zone)
+    return "Run Started!"
+
+
+@app.post("/volt/makeDepFile")
+async def make_deploymentFile (request: Request, sites_per_host: Union[int, None] = None , k_factor: Union[int, None] = None, httpd_enabled: Union[bool, None] = None, snapshot_enabled: Union[bool, None] = None, commandlog_enabled: Union[bool, None] = None, cmdlog_size: Union[float, None] = None):
+    templates = Jinja2Templates(directory="templates/")
+    file = templates.get_template("deployment.xml.jinja").render({"request": request, "Siter per Host": sites_per_host, "K-Factor Safety value": k_factor, "HTTP daemon Enabled": httpd_enabled, "Snapshot Enabled": snapshot_enabled, "Commandlog Enabled": commandlog_enabled, "Commandlog Size": cmdlog_size })
+    with open('output/deployment.xml', "w") as f:
+        print(file, file=f)
+        return "Deployment File created Successfully"
+

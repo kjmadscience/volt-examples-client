@@ -103,7 +103,7 @@ function async-benchmark() {
     java $add_open \
 	-classpath voter-client.jar:$CLIENTCLASSPATH voter.AsyncBenchmark \
         --displayinterval={{ display_interval| default(60, true) }} \
-        --warmup={{ warmp_up| default(5, true) }} \
+        --warmup={{ warm_up| default(5, true) }} \
         --duration={{ duration| default(60, true) }} \
         --servers=$SERVERS \
         --contestants={{ contestants| default(6, true) }} \
@@ -124,7 +124,7 @@ function sync-benchmark() {
 	-classpath voter-client.jar:$CLIENTCLASSPATH -Dlog4j.configuration=file://$LOG4J \
         voter.SyncBenchmark \
         --displayinterval={{ display_interval| default(60, true) }} \
-        --warmup={{ warmup| default(5, true) }} \
+        --warmup={{ warm_up| default(5, true) }} \
         --duration={{ duration| default(60, true) }} \
         --servers=$SERVERS \
         --contestants={{ contestants| default(6, true) }} \
