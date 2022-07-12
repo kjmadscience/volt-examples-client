@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <deployment>
-    <cluster sitesperhost="12" kfactor="1"/>
+    <cluster sitesperhost="8" kfactor="1"/>
     <partition-detection/>
     <heartbeat/>
     <ssl/>
 
-    <httpd enabled="True">
+    <httpd enabled="true">
         <jsonapi enabled="true"/>
     </httpd>
-    <snapshot enabled="True"/>
-    <commandlog enabled="True" logsize="10240">
+    <snapshot enabled="true"/>
+    <commandlog enabled="true" logsize="10240">
         <frequency/>
     </commandlog>
     <systemsettings>

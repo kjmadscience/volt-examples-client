@@ -128,7 +128,7 @@ function sync-benchmark() {
         --duration={{ duration| default(60, true) }} \
         --servers=$SERVERS \
         --contestants={{ contestants| default(6, true) }} \
-        --maxvotes={{ maxvotes| default(6, true) }} \
+        --maxvotes={{ maxvotes| default(2, true) }} \
         --ratelimit={{ ratelimit| default(10000, true) }} \
         --threads={{ threads| default(40, true) }}
 }

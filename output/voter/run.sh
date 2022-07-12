@@ -19,9 +19,9 @@ source $VOLTDB_BIN/voltenv
 
 # leader host for startup purposes only
 # (once running, all nodes are the same -- no leaders)
-STARTUPLEADERHOST="volt-1"
+STARTUPLEADERHOST="Thor"
 # list of cluster nodes separated by commas in host:[port] format
-if [ $SERVERS -eq '']; then SERVERS="volt-1"; fi
+if [ $SERVERS -eq '']; then SERVERS="Thor"; fi
 
 # remove binaries, logs, runtime artifacts, etc... but keep the jars
 function clean() {
@@ -102,13 +102,13 @@ function async-benchmark() {
     jars-ifneeded
     java $add_open \
 	-classpath voter-client.jar:$CLIENTCLASSPATH voter.AsyncBenchmark \
-        --displayinterval=60 \
-        --warmup=5 \
-        --duration=30 \
+        --displayinterval=500 \
+        --warmup=500 \
+        --duration=500 \
         --servers=$SERVERS \
-        --contestants=3 \
-        --ratelimit=1000 \
-        --maxvotes=6
+        --contestants=500 \
+        --ratelimit=500 \
+        --maxvotes=500
 }
 
 # Multi-threaded synchronous benchmark sample
@@ -123,14 +123,14 @@ function sync-benchmark() {
     java $add_opens \
 	-classpath voter-client.jar:$CLIENTCLASSPATH -Dlog4j.configuration=file://$LOG4J \
         voter.SyncBenchmark \
-        --displayinterval=60 \
-        --warmup=5 \
-        --duration=30 \
+        --displayinterval=500 \
+        --warmup=500 \
+        --duration=500 \
         --servers=$SERVERS \
-        --contestants=3 \
-        --maxvotes=6 \
-        --ratelimit=1000 \
-        --threads=40
+        --contestants=500 \
+        --maxvotes=500 \
+        --ratelimit=500 \
+        --threads=500
 }
 
 # JDBC benchmark sample
@@ -145,13 +145,13 @@ function jdbc-benchmark() {
     java $add_open \
 	-classpath voter-client.jar:$CLIENTCLASSPATH -Dlog4j.configuration=file://$LOG4J \
         voter.JDBCBenchmark \
-        --displayinterval=60 \
-        --duration=30 \
+        --displayinterval=500 \
+        --duration=500 \
         --servers=$SERVERS \
-        --maxvotes=2 \
-        --contestants=3 \
-        --ratelimit=1000 \
-        --threads=40
+        --maxvotes=500 \
+        --contestants=500 \
+        --ratelimit=500 \
+        --threads=500
 }
 
 function help() {
