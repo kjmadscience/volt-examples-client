@@ -62,3 +62,11 @@ async def Initialize_Volt_cluster(volt_hostnames: str, zone: str) -> int:
         os.system('gcloud compute ssh root@'+x+' --command="'+command+'" --zone='+zone)
     return "Volt Servers Initialized"
 
+@app.get("/volt/StartCluster")
+async def Start_Volt_cluster(volt_hostnames: str, zone: str) -> int:
+    command = '/opt/voltdb/bin/voltdb start --host='+volt_hostnames+' &'
+    host = volt_hostnames.split(",")
+    for x in host:
+        os.system('gcloud compute ssh root@'+x+' --command="'+command+'" --zone='+zone)
+    return "Volt Cluster Started"
+
