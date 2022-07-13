@@ -53,6 +53,16 @@ async def send_deployment_File (volt_hostnames: str, zone: str):
         os.system('gcloud compute scp '+source+' root@'+x+':'+dest+' --zone='+zone)
 
     return "Deployment File Copied"
+@app.post("/volt/License")
+async def send_license_file(volt_hostnames: str, zone: str, license_location: str) -> int:
+    source = license_location
+    dest = "/root/"
+
+    host = volt_hostnames.split(",")
+    for x in host:
+        os.system('gcloud compute scp '+source+' root@'+x+':'+dest+' --zone='+zone )
+    return "Volt Servers Initialized"
+
 
 @app.get("/volt/InitCluster")
 async def Initialize_Volt_cluster(volt_hostnames: str, zone: str) -> int:
@@ -64,9 +74,15 @@ async def Initialize_Volt_cluster(volt_hostnames: str, zone: str) -> int:
 
 @app.get("/volt/StartCluster")
 async def Start_Volt_cluster(volt_hostnames: str, zone: str) -> int:
-    command = '/opt/voltdb/bin/voltdb start --host='+volt_hostnames+' &'
+    command = 'nohup /opt/voltdb/bin/voltdb start --host='+volt_hostnames+' &'
     host = volt_hostnames.split(",")
     for x in host:
         os.system('gcloud compute ssh root@'+x+' --command="'+command+'" --zone='+zone)
     return "Volt Cluster Started"
 
+@app.get("/volt/StopCluster")
+async def Stop_Volt_cluster(volt_host: str, zone: str) -> int:
+    command = '/opt/voltdb/bin/voltadmin shutdown --save'
+    x = volt_host
+    os.system('gcloud compute ssh root@'+x+' --command="'+command+'" --zone='+zone)
+    return "Volt Cluster Stopped"
