@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<deployment>
+    <cluster sitesperhost="12" kfactor="1"/>
+    <partition-detection/>
+    <heartbeat/>
+    <ssl/>
+
+    <httpd enabled="true">
+        <jsonapi enabled="true"/>
+    </httpd>
+    <snapshot enabled="false"/>
+    <commandlog enabled="false" logsize="10240">
+        <frequency/>
+    </commandlog>
+    <systemsettings>
+        <temptables/>
+        <snapshot/>
+        <elastic/>
+        <query/>
+        <procedure/>
+        <resourcemonitor>
+            <memorylimit/>
+        </resourcemonitor>
+    </systemsettings>
+    <security/>
+</deployment>
